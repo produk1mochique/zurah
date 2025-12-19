@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mochique - E-Commerce Sederhana</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .product { border: 1px solid #ccc; padding: 10px; margin: 10px; display: inline-block; width: 200px; }
+        .cart { margin-top: 20px; border-top: 1px solid #000; padding-top: 10px; }
+        button { padding: 5px 10px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Selamat Datang di Mochique</h1>
+    <p>Website e-commerce sederhana untuk berbelanja pakaian.</p>
+
+    <h2>Produk Kami</h2>
+    <div id="products">
+        <!-- Produk akan dimuat oleh JavaScript -->
+    </div>
+
+    <div class="cart">
+        <h2>Keranjang Belanja</h2>
+        <ul id="cart-items"></ul>
+        <p>Total: Rp <span id="total">0</span></p>
+        <button onclick="checkout()">Checkout</button>
+    </div>
+
+    <script>
+        // Data produk (bisa diganti dengan data dari API)
+        const products = [
+            { id: 1, name: "Kaos Polos", price: 50000 },
+            { id: 2, name: "Celana Jeans", price: 150000 },
+            { id: 3, name: "Jaket Kulit", price: 300000 },
+            { id: 4, name: "Sepatu Sneakers", price: 200000 }
+        ];
+
+        // Keranjang belanja (array untuk menyimpan item)
+        let cart = [];
+        let total = 0;
+
+        // Fungsi untuk menampilkan produk
+        function displayProducts() {
+            const productContainer = document.getElementById('products');
+            products.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.className = 'product';
+                productDiv.innerHTML = `
+                    <h3>${product.name}</h3>
+                    <p>Harga: Rp ${product.price}</p>
+                    <button onclick="addToCart(${product.id})">Tambah ke Keranjang</button>
+                `;
+                productContainer.appendChild(productDiv);
+            });
+        }
+
+        // Fungsi untuk menambah produk ke keranjang
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            cart.push(product);
+            total += product.price;
+            updateCart();
+        }
+
+        // Fungsi untuk memperbarui tampilan keranjang
+        function updateCart() {
+            const cartItems = document.getElementById('cart-items');
+            cartItems.innerHTML = '';
+            cart.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.name} - Rp ${item.price}`;
+                cartItems.appendChild(li);
+            });
+            document.getElementById('total').textContent = total;
+        }
+
+        // Fungsi checkout sederhana
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Keranjang kosong! Tambahkan produk dulu.');
+            } else {
+                alert(`Checkout berhasil! Total pembayaran: Rp ${total}. (Ini simulasi saja.)`);
+                cart = [];
+                total = 0;
+                updateCart();
+            }
+        }
+
+        // Jalankan saat halaman dimuat
+        window.onload = displayProducts;
+    </script>
+</body>
+</html>
