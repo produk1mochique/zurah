@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mochique - E-Commerce Sederhana</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .product { border: 1px solid #ccc; padding: 10px; margin: 10px; display: inline-block; width: 250px; text-align: center; }
+        .cart { margin-top: 20px; border-top: 1px solid #000; padding-top: 10px; }
+        button { padding: 5px 10px; margin: 5px; }
+        .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); }
+        .modal-content { background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 500px; }
+        .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close:hover { color: black; }
+    </style>
+</head>
+<body>
+    <h1>Selamat Datang di Mochique</h1>
+    <p>Website e-commerce sederhana untuk berbelanja Mochique lezat.</p>
+
+    <h2>Beranda - Produk Mochique</h2>
+    <div id="products">
+        <!-- Produk akan dimuat oleh JavaScript -->
+    </div>
+
+    <!-- Modal untuk detail produk -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title"></h2>
+            <p><strong>Harga:</strong> Rp <span id="modal-price"></span></p>
+            <p><strong>Rating:</strong> <span id="modal-rating"></span>/5</p>
+            <p><strong>Ulasan:</strong> <span id="modal-review"></span></p>
+        </div>
+    </div>
+
+    <div class="cart">
+        <h2>Keranjang Belanja</h2>
+        <ul id="cart-items"></ul>
+        <p>Total: Rp <span id="total">0</span></p>
+        <button onclick="checkout()">Checkout</button>
+    </div>
+
+    <script>
+        // Data produk Mochique (dengan detail tambahan)
+        const products = [
+            { 
+                id: 1, 
+                name: "Mochique Matcha", 
+                price: 7000, 
+                rating: 4.5, 
+                review: "Enak banget, tekstur lembut dan rasa matcha yang autentik! Cocok untuk pecinta teh hijau." 
+            },
+            { 
+                id: 2, 
+                name: "Mochique Strawberry Chocolate", 
+                price: 6000, 
+                rating: 4.8, 
+                review: "Kombinasi strawberry dan cokelat yang sempurna, manis dan segar. Bikin nagih!" 
+            },
+            { 
+                id: 3, 
+                name: "Mochique Mango Cream", 
+                price: 7000, 
+                rating: 4.7, 
+                review: "Rasa mangga yang juicy dengan cream lembut, seperti musim panas dalam satu gigitan." 
+            }
+        ];
+
+        // Keranjang belanja (array untuk menyimpan item)
+        let cart = [];
+        let total = 0;
+
+        // Fungsi untuk menampilkan produk
+        function displayProducts() {
+            const productContainer = document.getElementById('products');
+            products.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.className = 'product';
+                productDiv.innerHTML = `
+                    <h3>${product.name}</h3>
+                    <p>Harga: Rp ${product.price}</p>
+                    <button onclick="addToCart(${product.id})">Tambah ke Keranjang</button>
+                    <button onclick="showDetail(${product.id})">Cek Detail</button>
+                `;
+                productContainer.appendChild(productDiv);
+            });
+        }
+
+        // Fungsi untuk menambah produk ke keranjang
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            cart.push(product);
+            total += product.price;
+            updateCart();
+        }
+
+        // Fungsi untuk memperbarui tampilan keranjang
+        function updateCart() {
+            const cartItems = document.getElementById('cart-items');
+            cartItems.innerHTML = '';
+            cart.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.name} - Rp ${item.price}`;
+                cartItems.appendChild(li);
+            });
+            document.getElementById('total').textContent = total;
+        }
+
+        // Fungsi untuk menampilkan detail produk di modal
+        function showDetail(productId) {
+            const product = products.find(p => p.id === productId);
+            document.getElementById('modal-title').textContent = product.name;
+            document.getElementById('modal-price').textContent = product.price;
+            document.getElementById('modal-rating').textContent = product.rating;
+            document.getElementById('modal-review').textContent = product.review;
+            document.getElementById('productModal').style.display = 'block';
+        }
+
+        // Fungsi untuk menutup modal
+        function closeModal() {
+            document.getElementById('productModal').style.display = 'none';
+        }
+
+        // Fungsi checkout sederhana
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Keranjang kosong! Tambahkan produk dulu.');
+            } else {
+                alert(`Checkout berhasil! Total pembayaran: Rp ${total}. (Ini simulasi saja.)`);
+                cart = [];
+                total = 0;
+                updateCart();
+            }
+        }
+
+        // Jalankan saat halaman dimuat
+        window.onload = displayProducts;
+    </script>
+</body>
+</html>
